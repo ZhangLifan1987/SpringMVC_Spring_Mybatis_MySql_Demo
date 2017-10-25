@@ -14,4 +14,8 @@ public interface ItemService {
     List<Items> findAllItems();
     Items findItemById(Integer id);
     List<Items> findItemByName(String name);
+    void deleteBatch(Integer[] ids);
+    void updateBatch(List<Items> itemsList);
+
+    void updateItem(Items items);
 }

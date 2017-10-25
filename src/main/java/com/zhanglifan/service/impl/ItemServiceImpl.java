@@ -37,4 +37,21 @@ public class ItemServiceImpl implements ItemService{
         List<Items> itemsList = itemsMapper.selectByExampleWithBLOBs(itemsExample);
         return itemsList;
     }
+
+    public void deleteBatch(Integer[] ids) {
+        for (Integer id : ids) {
+            //itemsMapper.deleteByPrimaryKey(id);
+            System.out.println("*** 删除了 "+id+" ***");
+        }
+    }
+
+    public void updateBatch(List<Items> itemsList) {
+        for (Items items : itemsList) {
+            itemsMapper.updateByPrimaryKeySelective(items);
+        }
+    }
+
+    public void updateItem(Items items) {
+        itemsMapper.updateByPrimaryKeySelective(items);
+    }
 }

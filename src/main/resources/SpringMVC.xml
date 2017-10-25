@@ -24,6 +24,13 @@
             </set>
         </property>
     </bean>
+    <!--mapping为匹配url,*代表下面的所有url;location为匹配项目文件夹,**代表下面的所有子孙文件夹-->
+    <mvc:resources mapping="/resource/*" location="/resource/**"></mvc:resources>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utif-8"></property>
+        <property name="maxUploadSize" value="5242880"></property>
+    </bean>
 
 </beans>
 

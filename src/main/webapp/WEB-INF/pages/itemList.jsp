@@ -12,19 +12,20 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>查询商品列表</title>
+    <script type="text/javascript" src="resource/jquery-3.2.1.js"></script>
 </head>
 <body>
 <form action="item/queryItem" method="post">
     查询条件：
     <table width="100%" border=1>
         <tr>
-            <td><input type="text" name="item_name" value="${item.name}"></td>
+            <td><input type="text" name="item_name" value="${keyword}"></td>
             <td><input type="submit" value="查询"/></td>
         </tr>
     </table>
 </form>
-<form action="item/deleteBatch" method="post">
-    商品列表：<input type="submit" value="批量删除">
+<form method="post" id="form">
+    商品列表：<input type="button" id="button1" value="批量删除"><input type="button" id="button2" value="批量修改">
     <table width="100%" border=1>
         <tr>
             <td>选择</td>
@@ -34,17 +35,31 @@
             <td>商品描述</td>
             <td>操作</td>
         </tr>
-        <c:forEach items="${itemList }" var="item">
+        <c:forEach items="${itemList }" var="item" varStatus="status">
             <tr>
                 <td><input type="checkbox" name="id" value="${item.id}"></td>
-                <td>${item.name }</td>
-                <td>${item.price }</td>
-                <td><fmt:formatDate value="${item.createtime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                <td>${item.detail }</td>
+                <input type="hidden" name="itemList[${status.index}].id" value="${item.id}">
+                <td><input type="text" name="itemList[${status.index}].name" value="${item.name}"></td>
+                <td><input type="text" name="itemList[${status.index}].price" value="${item.price}"></td>
+                <td><input type="text" name="itemList[${status.index}].createtime" value=<fmt:formatDate value="${item.createtime}" pattern="yyyy-MM-dd HH:mm:ss"/>></td>
+                <td><input type="text" name="itemList[${status.index}].detail" value="${item.detail}"></td>
                 <td><a href="item/itemEdit/${item.id}">修改</a></td>
             </tr>
         </c:forEach>
     </table>
 </form>
 </body>
+<script type="text/javascript">
+    $("#button1").click(function () {
+            $("#form").attr("action","item/deleteBatch");
+            $("#form").submit();
+        }
+    );
+    $("#button2").click(function () {
+            $("#form").attr("action","item/updateBatch");
+            $("#form").submit();
+        }
+    );
+
+</script>
 </html>
