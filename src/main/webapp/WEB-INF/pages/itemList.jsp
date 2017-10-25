@@ -26,6 +26,7 @@
 </form>
 <form method="post" id="form">
     商品列表：<input type="button" id="button1" value="批量删除"><input type="button" id="button2" value="批量修改">
+    <input type="button" id="button3" value="登出"><input type="button" id="button4" value="查看">
     <table width="100%" border=1>
         <tr>
             <td>选择</td>
@@ -37,7 +38,7 @@
         </tr>
         <c:forEach items="${itemList }" var="item" varStatus="status">
             <tr>
-                <td><input type="checkbox" name="id" value="${item.id}"></td>
+                <td><input type="checkbox" name="id" value="${item.id}" class="id"></td>
                 <input type="hidden" name="itemList[${status.index}].id" value="${item.id}">
                 <td><input type="text" name="itemList[${status.index}].name" value="${item.name}"></td>
                 <td><input type="text" name="itemList[${status.index}].price" value="${item.price}"></td>
@@ -58,6 +59,26 @@
     $("#button2").click(function () {
             $("#form").attr("action","item/updateBatch");
             $("#form").submit();
+        }
+    )
+    $("#button3").click(function () {
+            window.location.href="user/logout";
+        }
+    );
+    $("#button4").click(function () {
+            var ids = $(".id");
+            $.each(ids,function (index,obj) {
+                $.ajax({
+                    method:"post",//必须为post
+                    url:"item/viewItem",
+                    data:'{"id":"'+obj.value+'"}',
+                    contentType:"application/json", //设置请求体中参数是key/value型的还是json型的,如果是get则不受影响
+                    dataType:"text",
+                    success:function (data) {
+                        alert(data);
+                    }
+                });
+            });
         }
     );
 

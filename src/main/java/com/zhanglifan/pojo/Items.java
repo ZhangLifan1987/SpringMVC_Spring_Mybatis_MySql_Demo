@@ -1,16 +1,22 @@
 package com.zhanglifan.pojo;
 
+import com.zhanglifan.validator.ValidatorGroup1;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 public class Items {
     private Integer id;
 
+    @Size(min=1,max = 10,message = "{items.name.length.error}",groups = {ValidatorGroup1.class}) //不加$号
     private String name;
 
     private Float price;
 
     private String pic;
 
+    @NotNull(message = "{items.createtime.isnull}")
     private Date createtime;
 
     private String detail;

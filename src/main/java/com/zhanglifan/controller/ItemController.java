@@ -1,13 +1,16 @@
 package com.zhanglifan.controller;
 
+import com.zhanglifan.exception.CustomException;
 import com.zhanglifan.pojo.Items;
 import com.zhanglifan.service.ItemService;
+import com.zhanglifan.validator.ValidatorGroup1;
 import com.zhanglifan.vo.ItemListVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -49,7 +52,7 @@ public class ItemController {
     }
 
     @RequestMapping("deleteBatch")
-    public String deleteBatch(@RequestParam("id") Integer[] ids){
+    public String deleteBatch(@RequestParam(value = "id",required = false) Integer[] ids) throws CustomException {
         itemService.deleteBatch(ids);
         return "redirect:itemList";
     }
@@ -69,7 +72,15 @@ public class ItemController {
     }
 
     @RequestMapping("/updateItem")
-    public String edit(Items items , MultipartFile pictureFile) throws IOException {
+    //验证器使用时,BindingResult必须紧跟其后,否则报错400
+    public String edit(@Validated(value={ValidatorGroup1.class}) Items items, BindingResult bindingResult, MultipartFile pictureFile) throws IOException {
+        if(bindingResult.hasErrors()){
+            List<ObjectError> allErrors = bindingResult.getAllErrors();
+            for (ObjectError error : allErrors) {
+                System.out.println("*** error 的值是: " + new String(error.getDefaultMessage().getBytes("iso-8859-1"),"gbk")  + " ***");//此处要看properties文件是什么类型,这里是GBK类型
+            }
+        }
+
         if(pictureFile!=null){
             String suffix = pictureFile.getOriginalFilename().substring(pictureFile.getOriginalFilename().lastIndexOf("."));
             String fileName = UUID.randomUUID().toString() + suffix;
@@ -78,6 +89,12 @@ public class ItemController {
         }
         itemService.updateItem(items);
         return "forward:itemList"; //此为相对路径,不是逻辑视图
+    }
+
+    @RequestMapping("/viewItem")
+    public @ResponseBody Items viewItem(@RequestBody Items items){
+        Items item = itemService.findItemById(items.getId());
+        return item;
     }
 
 }

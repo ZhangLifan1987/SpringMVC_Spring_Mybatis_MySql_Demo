@@ -1,5 +1,6 @@
 package com.zhanglifan.service.impl;
 
+import com.zhanglifan.exception.CustomException;
 import com.zhanglifan.mapper.ItemsMapper;
 import com.zhanglifan.pojo.Items;
 import com.zhanglifan.pojo.ItemsExample;
@@ -38,7 +39,10 @@ public class ItemServiceImpl implements ItemService{
         return itemsList;
     }
 
-    public void deleteBatch(Integer[] ids) {
+    public void deleteBatch(Integer[] ids) throws CustomException {
+        if(ids==null || ids.length==0){
+            throw new CustomException("请选择要删除的物品~!");
+        }
         for (Integer id : ids) {
             //itemsMapper.deleteByPrimaryKey(id);
             System.out.println("*** 删除了 "+id+" ***");

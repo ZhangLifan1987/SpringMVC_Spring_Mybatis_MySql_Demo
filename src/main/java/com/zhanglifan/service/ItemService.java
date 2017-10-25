@@ -1,5 +1,6 @@
 package com.zhanglifan.service;
 
+import com.zhanglifan.exception.CustomException;
 import com.zhanglifan.pojo.Items;
 
 import java.util.List;
@@ -14,8 +15,7 @@ public interface ItemService {
     List<Items> findAllItems();
     Items findItemById(Integer id);
     List<Items> findItemByName(String name);
-    void deleteBatch(Integer[] ids);
+    void deleteBatch(Integer[] ids) throws CustomException;
     void updateBatch(List<Items> itemsList);
-
     void updateItem(Items items);
 }
